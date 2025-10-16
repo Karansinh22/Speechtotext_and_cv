@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech Test</title>
+</head>
+<body>
+    <h2>Speech Recognition Test</h2>
+    <button id="startBtn">Start Listening</button>
+    <p id="status">Click the button to start</p>
+    <p id="output"></p>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            startBtn.onclick = () => {
+                status.textContent = 'Listening...';
+                recognition.start();
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                output.textContent = 'You said: ' + transcript;
+                status.textContent = 'Done';
+            };
+
+            recognition.onerror = (event) => {
+                status.textContent = 'Error: ' + event.error;
+            };
+        } else {
+            status.textContent = 'Speech recognition not supported in this browser.';
+        }
+    </script>
+</body>
+</html>
